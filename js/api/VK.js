@@ -5,22 +5,72 @@
  * Имеет свойства ACCESS_TOKEN и lastCallback
  * */
 class VK {
-
   static ACCESS_TOKEN = '958eb5d439726565e9333aa30e50e0f937ee432e927f0dbd541c541887d919a7c56f95c04217915c32008';
-  static lastCallback;
+  static lastCallback = () => {};
 
   /**
    * Получает изображения
    * */
-  static get(id = '', callback){
-
+  static get(id = '', callback) {
+    this.lastCallback = callback;
+    
+    const script = document.createElement('script');
+    const callbackName = `jsonp_${Date.now()}`;
+    
+    window[callbackName] = (response) => {
+      this.processData(response);
+      delete window[callbackName];
+    };
+    
+    script.src = `https://api.vk.com/method/photos.get?owner_id=${id}&album_id=profile&access_token=${this.ACCESS_TOKEN}&v=5.131&callback=${callbackName}`;
+    script.onerror = () => {
+      alert('Failed to load data from VK');
+      delete window[callbackName];
+      document.body.removeChild(script);
+    };
+    
+    document.body.appendChild(script);
   }
 
   /**
    * Передаётся в запрос VK API для обработки ответа.
    * Является обработчиком ответа от сервера.
    */
-  static processData(result){
+  static processData(result) {
+    // Remove all script tags we added
+    const scripts = document.querySelectorAll('script');
+    scripts.forEach(script => {
+      if (script.src.includes('api.vk.com/method/photos.get')) {
+        document.body.removeChild(script);
+      }
+    });
 
+    if (result.error) {
+      alert(`VK API Error: ${result.error.error_msg}`);
+      this.lastCallback = () => {};
+      return;
+    }
+
+    if (!result.response) {
+      alert('No photos found');
+      this.lastCallback = () => {};
+      return;
+    }
+
+    // Find largest photos
+    const photos = result.response.items.flatMap(item => {
+      return item.sizes
+        .map(size => ({
+          url: size.url,
+          width: size.width,
+          height: size.height,
+          type: size.type
+        }))
+        .sort((a, b) => (b.width * b.height) - (a.width * a.height))
+        .slice(0, 1);
+    });
+
+    this.lastCallback(photos);
+    this.lastCallback = () => {};
   }
 }

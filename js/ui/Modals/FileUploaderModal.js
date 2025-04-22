@@ -1,50 +1,70 @@
-/**
- * Класс FileUploaderModal
- * Используется как всплывающее окно для загрузки изображений
- */
-class FileUploaderModal {
-  constructor( element ) {
-
+class FileUploaderModal extends BaseModal {
+  constructor(element) {
+    super(element);
+    this.content = element.find('.content')[0];
+    this.registerEvents();
   }
 
-  /**
-   * Добавляет следующие обработчики событий:
-   * 1. Клик по крестику на всплывающем окне, закрывает его
-   * 2. Клик по кнопке "Закрыть" на всплывающем окне, закрывает его
-   * 3. Клик по кнопке "Отправить все файлы" на всплывающем окне, вызывает метод sendAllImages
-   * 4. Клик по кнопке загрузке по контроллерам изображения: 
-   * убирает ошибку, если клик был по полю вода
-   * отправляет одно изображение, если клик был по кнопке отправки
-   */
-  registerEvents(){
-
+  registerEvents() {
+    // Close on X icon click
+    this.element.find('.x.icon').on('click', () => this.close());
+    // Close on close button click
+    this.element.find('.close.button').on('click', () => this.close());
+    // Send all images
+    this.element.find('.send-all.button').on('click', () => this.sendAllImages());
+    // Handle individual image actions
+    $(this.content).on('click', (e) => {
+      const target = $(e.target);
+      if (target.hasClass('upload')) {
+        const container = target.closest('.image-preview-container');
+        this.sendImage(container);
+      }
+    });
   }
 
-  /**
-   * Отображает все полученные изображения в теле всплывающего окна
-   */
   showImages(images) {
-
+    const html = images.reverse().map(image => this.getImageHTML(image)).join('');
+    this.content.innerHTML = html;
   }
 
-  /**
-   * Формирует HTML разметку с изображением, полем ввода для имени файла и кнопкной загрузки
-   */
   getImageHTML(item) {
-
+    return `
+      <div class="image-preview-container">
+        <img src='${item.url}' />
+        <div class="ui action input">
+          <input type="text" placeholder="Имя файла">
+          <button class="ui button upload"><i class="upload icon"></i></button>
+        </div>
+      </div>
+    `;
   }
 
-  /**
-   * Отправляет все изображения в облако
-   */
   sendAllImages() {
-
+    const containers = this.content.querySelectorAll('.image-preview-container');
+    containers.forEach(container => this.sendImage($(container)));
   }
 
-  /**
-   * Валидирует изображение и отправляет его на сервер
-   */
   sendImage(imageContainer) {
+    const input = imageContainer.find('input');
+    const button = imageContainer.find('.upload');
+    const img = imageContainer.find('img')[0];
+    const fileName = input.val().trim();
+    
+    if (!fileName) {
+      input.parent().addClass('error');
+      return;
+    }
 
+    input.parent().removeClass('error');
+    button.addClass('disabled');
+    button.find('i').removeClass('upload').addClass('spinner loading');
+
+    Yandex.uploadFile(fileName, img.src, (err, response) => {
+      if (!err) {
+        imageContainer.remove();
+      }
+      button.removeClass('disabled');
+      button.find('i').removeClass('spinner loading').addClass('upload');
+    });
   }
 }
