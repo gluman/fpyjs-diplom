@@ -5,7 +5,7 @@
  * Имеет свойства ACCESS_TOKEN и lastCallback
  * */
 class VK {
-  static ACCESS_TOKEN = '958eb5d439726565e9333aa30e50e0f937ee432e927f0dbd541c541887d919a7c56f95c04217915c32008';
+  static ACCESS_TOKEN = 'vk1.a.bOwH46M6fs3Amc8XVwK8Uka_RatxumB-_8dSJmjNxD4gzZjW5-PEC26PCnSfSDp4k1fkmIHMEI2C2rvroON4utCPPkbCCfV0o45kfxdzijvFsG_sE59Rr3tcYJIsYtEjR-0cH30pDcDyz5_nv_pnnNcDUs9cMelKmOYOMgdTNr7PidVtIrqkZY3yWVv5ihU5aCK9x5iVAV-KD0GQv3bxGw';
   static lastCallback = () => {};
 
   /**
