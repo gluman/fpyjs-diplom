@@ -1,6 +1,4 @@
-/**
- * Основная функция для совершения запросов по Yandex API.
- * */
+// createRequest.js
 const createRequest = (options = {}) => {
     const xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
@@ -11,7 +9,6 @@ const createRequest = (options = {}) => {
     const callback = options.callback;
     const data = options.data;
   
-    // Add query parameters if GET request and data is provided
     if (method === 'GET' && data) {
       const queryString = Object.entries(data)
         .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
@@ -34,12 +31,10 @@ const createRequest = (options = {}) => {
     try {
       xhr.open(method, url);
       
-      // Set headers
       for (const [key, value] of Object.entries(headers)) {
         xhr.setRequestHeader(key, value);
       }
   
-      // Send data for non-GET requests
       if (method !== 'GET' && data) {
         xhr.send(JSON.stringify(data));
       } else {

@@ -1,3 +1,4 @@
+// PreviewModal.js
 class PreviewModal extends BaseModal {
   constructor(element) {
     super(element);
@@ -6,9 +7,8 @@ class PreviewModal extends BaseModal {
   }
 
   registerEvents() {
-    // Close on X icon click
     this.element.find('.x.icon').on('click', () => this.close());
-    // Handle delete and download buttons
+    
     $(this.content).on('click', (e) => {
       const target = $(e.target);
       if (target.hasClass('delete') || target.closest('.delete').length) {

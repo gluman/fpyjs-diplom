@@ -1,3 +1,4 @@
+// FileUploaderModal.js
 class FileUploaderModal extends BaseModal {
   constructor(element) {
     super(element);
@@ -6,13 +7,10 @@ class FileUploaderModal extends BaseModal {
   }
 
   registerEvents() {
-    // Close on X icon click
     this.element.find('.x.icon').on('click', () => this.close());
-    // Close on close button click
     this.element.find('.close.button').on('click', () => this.close());
-    // Send all images
     this.element.find('.send-all.button').on('click', () => this.sendAllImages());
-    // Handle individual image actions
+    
     $(this.content).on('click', (e) => {
       const target = $(e.target);
       if (target.hasClass('upload')) {

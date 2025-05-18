@@ -1,3 +1,4 @@
+// SearchBlock.js
 class SearchBlock {
   constructor(element) {
     this.element = element;

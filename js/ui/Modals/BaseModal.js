@@ -1,3 +1,4 @@
+// BaseModal.js
 class BaseModal {
   constructor(element) {
     this.element = element;

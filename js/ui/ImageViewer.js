@@ -1,3 +1,4 @@
+// ImageViewer.js
 class ImageViewer {
   constructor(element) {
     this.element = element;
@@ -7,14 +8,12 @@ class ImageViewer {
   }
 
   registerEvents() {
-    // Double click to preview
     this.imagesContainer.addEventListener('dblclick', (e) => {
       if (e.target.tagName === 'IMG') {
         this.preview.src = e.target.src;
       }
     });
 
-    // Single click to select
     this.imagesContainer.addEventListener('click', (e) => {
       if (e.target.tagName === 'IMG') {
         e.target.classList.toggle('selected');
@@ -22,7 +21,6 @@ class ImageViewer {
       }
     });
 
-    // Select all button
     const selectAllBtn = this.element.querySelector('.select-all');
     selectAllBtn.addEventListener('click', () => {
       const images = this.imagesContainer.querySelectorAll('img');
@@ -39,7 +37,6 @@ class ImageViewer {
       this.checkButtonText();
     });
 
-    // Show uploaded files button
     const showUploadedBtn = this.element.querySelector('.show-uploaded-files');
     showUploadedBtn.addEventListener('click', () => {
       const modal = App.getModal('filePreviewer');
@@ -53,7 +50,6 @@ class ImageViewer {
       });
     });
 
-    // Send to disk button
     const sendBtn = this.element.querySelector('.send');
     sendBtn.addEventListener('click', () => {
       const selectedImages = this.imagesContainer.querySelectorAll('img.selected');

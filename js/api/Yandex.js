@@ -1,14 +1,7 @@
-/**
- * Класс Yandex
- * Используется для управления облаком.
- * Имеет свойство HOST
- * */
+// Yandex.js
 class Yandex {
   static HOST = 'https://cloud-api.yandex.net/v1/disk';
 
-  /**
-   * Метод формирования и сохранения токена для Yandex API
-   */
   static getToken() {
     const token = localStorage.getItem('yandex_token');
     if (token) return token;
@@ -21,9 +14,6 @@ class Yandex {
     return null;
   }
 
-  /**
-   * Метод загрузки файла в облако
-   */
   static uploadFile(path, url, callback) {
     const token = this.getToken();
     if (!token) {
@@ -45,9 +35,6 @@ class Yandex {
     });
   }
 
-  /**
-   * Метод удаления файла из облака
-   */
   static removeFile(path, callback) {
     const token = this.getToken();
     if (!token) {
@@ -68,9 +55,6 @@ class Yandex {
     });
   }
 
-  /**
-   * Метод получения всех загруженных файлов в облаке
-   */
   static getUploadedFiles(callback) {
     const token = this.getToken();
     if (!token) {
@@ -88,9 +72,6 @@ class Yandex {
     });
   }
 
-  /**
-   * Метод скачивания файлов
-   */
   static downloadFileByUrl(url) {
     const link = document.createElement('a');
     link.href = url;
