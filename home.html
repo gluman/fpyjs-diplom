@@ -73,7 +73,10 @@
     <script src="js/App.js"></script>
 
     <script>
-      App.init();
+        // Инициализация приложения после загрузки DOM
+  document.addEventListener('DOMContentLoaded', () => {
+    App.init();
+  });
     </script>
   </body>
 </html>

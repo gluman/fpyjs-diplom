@@ -1,17 +1,28 @@
-/**
- * Класс VK
- * Управляет изображениями из VK. С помощью VK API.
- * С помощью этого класса будет выполняться загрузка изображений из vk.
- * Имеет свойства ACCESS_TOKEN и lastCallback
- * */
 class VK {
-  static ACCESS_TOKEN = 'vk1.a.bOwH46M6fs3Amc8XVwK8Uka_RatxumB-_8dSJmjNxD4gzZjW5-PEC26PCnSfSDp4k1fkmIHMEI2C2rvroON4utCPPkbCCfV0o45kfxdzijvFsG_sE59Rr3tcYJIsYtEjR-0cH30pDcDyz5_nv_pnnNcDUs9cMelKmOYOMgdTNr7PidVtIrqkZY3yWVv5ihU5aCK9x5iVAV-KD0GQv3bxGw';
+  static ACCESS_TOKEN = null;
   static lastCallback = () => {};
 
   /**
-   * Получает изображения
-   * */
+   * Метод получения токена для VK API
+   */
+  static getToken() {
+    if (this.ACCESS_TOKEN) return this.ACCESS_TOKEN;
+    
+    const newToken = prompt('Введите токен VK API');
+    if (newToken) {
+      this.ACCESS_TOKEN = newToken;
+      return newToken;
+    }
+    return null;
+  }
+
   static get(id = '', callback) {
+    const token = this.getToken();
+    if (!token) {
+      alert('Необходимо ввести токен VK API');
+      return;
+    }
+
     this.lastCallback = callback;
     
     const script = document.createElement('script');
@@ -22,7 +33,7 @@ class VK {
       delete window[callbackName];
     };
     
-    script.src = `https://api.vk.com/method/photos.get?owner_id=${id}&album_id=profile&access_token=${this.ACCESS_TOKEN}&v=5.131&callback=${callbackName}`;
+    script.src = `https://api.vk.com/method/photos.get?owner_id=${id}&album_id=profile&access_token=${token}&v=5.131&callback=${callbackName}`;
     script.onerror = () => {
       alert('Failed to load data from VK');
       delete window[callbackName];
@@ -32,12 +43,7 @@ class VK {
     document.body.appendChild(script);
   }
 
-  /**
-   * Передаётся в запрос VK API для обработки ответа.
-   * Является обработчиком ответа от сервера.
-   */
   static processData(result) {
-    // Remove all script tags we added
     const scripts = document.querySelectorAll('script');
     scripts.forEach(script => {
       if (script.src.includes('api.vk.com/method/photos.get')) {
@@ -57,7 +63,6 @@ class VK {
       return;
     }
 
-    // Find largest photos
     const photos = result.response.items.flatMap(item => {
       return item.sizes
         .map(size => ({
