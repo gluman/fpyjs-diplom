@@ -2,6 +2,14 @@ class VK {
   static ACCESS_TOKEN = null;
   static lastCallback = () => {};
 
+  // class VK {
+  // static ACCESS_TOKEN = 'ваш_токен_здесь'; // Временное решение для теста
+  
+  // static get(id, callback) {
+  //   const url = `https://api.vk.com/method/photos.get?owner_id=${id}&access_token=${this.ACCESS_TOKEN}&v=5.131`;
+
+ 
+
   /**
    * Метод получения токена для VK API
    */
